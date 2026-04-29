@@ -20,7 +20,7 @@ Exact visual and functional replica of an internal company leaderboard. Static s
 - React 19 + Vite + TypeScript
 - Tailwind CSS (v4) for all styling
 - No component library unless REFERENCE.md indicates complex UI elements that justify shadcn/ui
-- Data: hardcoded TypeScript array — no fetch, no API, no JSON file import
+- Data: hardcoded TypeScript array only — no fetch, no API, no JSON file import. Avatars must be generated as inline SVG data URLs, not DiceBear or any other external image/service URL.
 
 ## Project Structure
 ```
