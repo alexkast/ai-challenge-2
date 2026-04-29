@@ -114,7 +114,7 @@ npm run build       # Vite production build
 - **Departments**: use exactly the departments from REFERENCE.md. Fallback: Engineering, Marketing, Sales, Design, Product, Operations
 - **Titles**: realistic titles matching department context
 - **Scores**: realistic leaderboard curve — 2-3 high outliers, clustered middle, some low. Not uniform random.
-- **Avatars**: DiceBear: `https://api.dicebear.com/7.x/avataaars/svg?seed={name}`
+- **Avatars**: inline SVG data URLs generated from initials + deterministic color palette — no external image requests
 - **Other fields**: match all fields in REFERENCE.md
 
 ## Code Rules
