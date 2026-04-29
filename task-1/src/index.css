@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell,
+    "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+
+  --color-page-bg: #f8fafc;
+  --color-card-bg: #ffffff;
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #64748b;
+  --color-text-muted: #94a3b8;
+  --color-accent: #0ea5e9;
+  --color-accent-light: #e0f2fe;
+  --color-border: #e2e8f0;
+  --color-hover-bg: #f1f5f9;
+  --color-hover-border: #e2e8f0;
+
+  --color-rank-gold: #eab308;
+  --color-rank-gold-light: #fef3c7;
+  --color-rank-gold-mid: #fde68a;
+  --color-rank-gold-score-bg: #fef9c3;
+  --color-rank-gold-score-border: #fde047;
+  --color-rank-gold-score-text: #ca8a04;
+  --color-rank-gold-avatar-border: #fbbf24;
+  --color-rank-silver: #94a3b8;
+  --color-rank-silver-light: #e2e8f0;
+  --color-rank-silver-mid: #cbd5e1;
+  --color-rank-bronze: #92400e;
+
+  --color-badge-training-bg: #dbeafe;
+  --color-badge-training-text: #1e40af;
+  --color-badge-contribution-bg: #f3e8ff;
+  --color-badge-contribution-text: #6b21a8;
+  --color-badge-community-bg: #dcfce7;
+  --color-badge-community-text: #166534;
+  --color-badge-default-bg: #e2e8f0;
+  --color-badge-default-text: #475569;
+
+  --color-activity-cell: #1e293b;
+  --color-details-bg: #f8fafc;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--color-page-bg);
+  color: var(--color-text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Responsive: <=768px */
+@media (max-width: 768px) {
+  .leaderboard-root {
+    padding: 16px !important;
+  }
+
+  /* Filter bar stacks vertically */
+  .leaderboard-root [aria-label="Filter by year"],
+  .leaderboard-root [aria-label="Filter by quarter"],
+  .leaderboard-root [aria-label="Filter by category"] {
+    width: 100%;
+  }
+
+  /* Podium stacks vertically, rank 1 on top */
+  .podium-container {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  /* Explicit mobile order: rank1 top (order 2→1), rank2 second (order 1→2), rank3 third (order 3→3) */
+  .podium-container > div:nth-child(1) { order: 2 !important; margin-top: 0 !important; width: 100%; max-width: 280px; } /* rank2 column */
+  .podium-container > div:nth-child(2) { order: 1 !important; margin-top: 0 !important; width: 100%; max-width: 280px; } /* rank1 column */
+  .podium-container > div:nth-child(3) { order: 3 !important; margin-top: 0 !important; width: 100%; max-width: 280px; } /* rank3 column */
+
+  /* Row stacks vertically */
+  .row-main {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  .row-left {
+    gap: 16px !important;
+    width: 100%;
+  }
+
+  .row-right {
+    width: 100%;
+    border-top: 1px solid var(--color-border);
+    padding-top: 16px;
+    gap: 16px !important;
+  }
+
+  /* Hide total section on mobile */
+  .total-section {
+    display: none !important;
+  }
+
+  /* Category stats smaller gap */
+  .category-stats {
+    gap: 16px !important;
+  }
+
+  /* Details section padding */
+  .details-section {
+    padding: 16px !important;
+  }
+}
