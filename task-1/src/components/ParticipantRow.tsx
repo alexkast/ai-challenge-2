@@ -246,6 +246,7 @@ export default function ParticipantRow({ participant: p }: ParticipantRowProps) 
             type="button"
             onClick={() => setExpanded((v) => !v)}
             aria-label={expanded ? "Collapse" : "Expand"}
+            aria-expanded={expanded}
             style={{
               width: "36px",
               height: "36px",

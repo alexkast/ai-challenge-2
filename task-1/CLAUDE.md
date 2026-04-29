@@ -10,17 +10,17 @@
 Exact visual and functional replica of an internal company leaderboard. Static site deployed to GitHub Pages. All data is fake — no real names, titles, photos, or department names.
 
 ## Critical Constraints
-- **GitHub Pages only** — no backend, no SSR, no runtime API calls. Pure static site.
+- **GitHub Pages only** — no backend, no SSR, no runtime API calls. Pure static site. Avatars are generated as inline SVG data URLs — no external image requests.
 - **Exact clone** — replicate what exists. Do NOT add features, animations, dark mode, or anything not in the original. When in doubt, leave it out.
 - **No real data** — every name, title, department, avatar, and score must be generated. Nothing copied from the original.
 - **Read REFERENCE.md first** — before writing any component, read `REFERENCE.md` for the original's exact layout, colors, fonts, filters, and sorting behaviour. Do not guess.
 - **All app files go inside `task-1/`** — do not create app source files outside this directory.
 
 ## Stack
-- React 18 + Vite + TypeScript
+- React 19 + Vite + TypeScript
 - Tailwind CSS (v4) for all styling
 - No component library unless REFERENCE.md indicates complex UI elements that justify shadcn/ui
-- Data: hardcoded TypeScript array — no fetch, no API, no JSON file import
+- Data: hardcoded TypeScript array only — no fetch, no API, no JSON file import. Avatars must be generated as inline SVG data URLs, not DiceBear or any other external image/service URL.
 
 ## Project Structure
 ```
@@ -35,7 +35,6 @@ ai-challenge-2/
     ├── report.md                # Approach report (write last)
     ├── index.html
     ├── vite.config.ts           # base: '/ai-challenge-2/'
-    ├── tailwind.config.ts
     ├── tsconfig.json
     ├── package.json
     └── src/
@@ -115,7 +114,7 @@ npm run build       # Vite production build
 - **Departments**: use exactly the departments from REFERENCE.md. Fallback: Engineering, Marketing, Sales, Design, Product, Operations
 - **Titles**: realistic titles matching department context
 - **Scores**: realistic leaderboard curve — 2-3 high outliers, clustered middle, some low. Not uniform random.
-- **Avatars**: DiceBear: `https://api.dicebear.com/7.x/avataaars/svg?seed={name}`
+- **Avatars**: inline SVG data URLs generated from initials + deterministic color palette — no external image requests
 - **Other fields**: match all fields in REFERENCE.md
 
 ## Code Rules

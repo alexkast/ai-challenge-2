@@ -1,7 +1,7 @@
-import type { Activity } from "../types";
+import type { Activity, ActivityCategory } from "../types";
 
 // Screenshots confirm all activity table badges use the neutral gray "default" style
-const categoryBadgeStyle: Record<string, { bg: string; text: string }> = {
+const categoryBadgeStyle: Record<ActivityCategory, { bg: string; text: string }> = {
   Education: { bg: "var(--color-badge-default-bg)", text: "var(--color-badge-default-text)" },
   "Public Speaking": { bg: "var(--color-badge-default-bg)", text: "var(--color-badge-default-text)" },
   "University Partnership": { bg: "var(--color-badge-default-bg)", text: "var(--color-badge-default-text)" },

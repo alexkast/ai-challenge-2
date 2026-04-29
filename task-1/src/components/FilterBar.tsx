@@ -88,6 +88,7 @@ export default function FilterBar({ filters, onChange }: FilterBarProps) {
         <input
           type="text"
           placeholder="Search employee..."
+          aria-label="Search employee"
           value={filters.search}
           onChange={(e) => set("search", e.target.value)}
           style={{
