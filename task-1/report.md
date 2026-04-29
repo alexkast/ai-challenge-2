@@ -3,7 +3,7 @@
 ## Tools Used
 
 - **Claude Code (Pro)** — primary AI coding tool for generating React components, fake data, and deployment configuration
-- **GitHub Copilot** — autocomplete assistance during manual adjustments
+- **GitHub Copilot** — PR code review via GitHub pull request review integration
 - **Chrome DevTools** — extracting layout structure, CSS design tokens, and interaction patterns from the original leaderboard
 - **Stack**: React + Vite + TypeScript + Tailwind CSS
 - **Deployment**: GitHub Pages via GitHub Actions
