@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import type { Participant } from "../types";
 
 interface PodiumProps {
@@ -43,7 +44,7 @@ function PodiumColumn({ participant: p, isFirst }: PodiumColumnProps) {
   const avatarBorder =
     rank === 1 ? "4px solid var(--color-rank-gold-avatar-border)" : "none";
 
-  const scoreStyle: React.CSSProperties =
+  const scoreStyle: CSSProperties =
     rank === 1
       ? {
           background: "var(--color-rank-gold-score-bg)",

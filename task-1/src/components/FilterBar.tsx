@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import type { FilterState } from "../types";
 
 interface FilterBarProps {
@@ -5,7 +6,7 @@ interface FilterBarProps {
   onChange: (next: FilterState) => void;
 }
 
-const selectStyle: React.CSSProperties = {
+const selectStyle: CSSProperties = {
   fontSize: "14px",
   color: "var(--color-text-primary)",
   background: "var(--color-card-bg)",

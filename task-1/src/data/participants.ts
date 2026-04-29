@@ -1,4 +1,5 @@
 import type { Participant } from "../types";
+import { buildCategoryStats } from "../utils/categoryStats";
 
 function dicebear(name: string): string {
   return `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name)}`;
@@ -383,19 +384,6 @@ const raw: Omit<Participant, "rank" | "totalScore" | "categoryStats">[] = [
     ],
   },
 ];
-
-function buildCategoryStats(activities: Omit<Participant, "rank" | "totalScore" | "categoryStats">["activities"]): import("../types").CategoryStat[] {
-  const map = new Map<string, { icon: "Education" | "Presentation" | "Emoji2"; count: number; label: import("../types").ActivityCategory }>();
-  for (const a of activities) {
-    const icon = a.category === "Education" ? "Education" : a.category === "Public Speaking" ? "Presentation" : "Emoji2";
-    if (map.has(a.category)) {
-      map.get(a.category)!.count++;
-    } else {
-      map.set(a.category, { icon, count: 1, label: a.category });
-    }
-  }
-  return Array.from(map.values());
-}
 
 function buildParticipants(): Participant[] {
   const built = raw.map((p) => ({

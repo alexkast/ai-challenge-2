@@ -1,4 +1,5 @@
 import { useState } from "react";
+import type { CSSProperties, MouseEvent } from "react";
 import type { Participant } from "../types";
 import ActivityTable from "./ActivityTable";
 
@@ -63,7 +64,7 @@ const iconMap = {
 export default function ParticipantRow({ participant: p }: ParticipantRowProps) {
   const [expanded, setExpanded] = useState(false);
 
-  const cardStyle: React.CSSProperties = {
+  const cardStyle: CSSProperties = {
     background: "var(--color-card-bg)",
     borderRadius: "12px",
     boxShadow: expanded ? "0 4px 12px rgba(0,0,0,0.1)" : "0 1px 3px rgba(0,0,0,0.1)",
@@ -72,13 +73,13 @@ export default function ParticipantRow({ participant: p }: ParticipantRowProps) 
     transition: "box-shadow 0.15s",
   };
 
-  function handleMouseEnter(e: React.MouseEvent<HTMLDivElement>) {
+  function handleMouseEnter(e: MouseEvent<HTMLDivElement>) {
     if (!expanded) {
       (e.currentTarget as HTMLDivElement).style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";
     }
   }
 
-  function handleMouseLeave(e: React.MouseEvent<HTMLDivElement>) {
+  function handleMouseLeave(e: MouseEvent<HTMLDivElement>) {
     if (!expanded) {
       (e.currentTarget as HTMLDivElement).style.boxShadow = "0 1px 3px rgba(0,0,0,0.1)";
     }

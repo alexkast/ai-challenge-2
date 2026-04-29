@@ -65,7 +65,7 @@ export default function ActivityTable({ activities }: ActivityTableProps) {
               const isLast = idx === activities.length - 1;
               return (
                 <tr
-                  key={idx}
+                  key={`${a.name}-${a.date}`}
                   style={{ cursor: "default" }}
                   onMouseEnter={(e) => {
                     (e.currentTarget as HTMLTableRowElement).style.background =
