@@ -2,7 +2,24 @@ import type { Participant } from "../types";
 import { buildCategoryStats } from "../utils/categoryStats";
 
 function dicebear(name: string): string {
-  return `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(name)}`;
+  const normalized = name.trim();
+  const initials = normalized
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
+  const palettes = [
+    { bg: "#DBEAFE", fg: "#1E3A8A" },
+    { bg: "#DCFCE7", fg: "#166534" },
+    { bg: "#FCE7F3", fg: "#9D174D" },
+    { bg: "#FEF3C7", fg: "#92400E" },
+    { bg: "#EDE9FE", fg: "#5B21B6" },
+  ];
+  const hash = Array.from(normalized).reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const { bg, fg } = palettes[hash % palettes.length];
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" viewBox="0 0 96 96" role="img" aria-label="${normalized}"><rect width="96" height="96" rx="48" fill="${bg}" /><text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-family="Arial, Helvetica, sans-serif" font-size="32" font-weight="700" fill="${fg}">${initials}</text></svg>`;
+  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(svg)}`;
 }
 
 const raw: Omit<Participant, "rank" | "totalScore" | "categoryStats">[] = [
