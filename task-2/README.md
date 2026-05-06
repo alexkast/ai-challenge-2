@@ -1,7 +1,7 @@
 # Event Hosting Platform
 
 ## Live URL
-https://your-app.netlify.app
+https://tiny-cat-43667f.netlify.app
 
 ## Main Flows
 
