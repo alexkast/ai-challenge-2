@@ -7,7 +7,7 @@ free community-style events end to end.
 https://tiny-cat-43667f.netlify.app
 
 ## GitHub Repository
-https://github.com/[your-username]/[your-repo]/tree/main/task-2
+https://github.com/alexkast/ai-challenge-2/tree/main/task-2
 
 ## Tech Stack
 - React + TypeScript + Vite + Tailwind CSS
