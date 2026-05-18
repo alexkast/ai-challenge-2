@@ -1,0 +1,43 @@
+name: ATC MCP Server Tests
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "task-4/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "task-4/**"
+
+jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: task-4
+
+    env:
+      RUNWAY_COUNT: "2"
+      RUNWAY_LENGTHS: "3000,3500"
+      GATE_COUNT: "5"
+      GROUND_CREW_COUNT: "3"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.0.2
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run separation unit tests
+        run: pytest test_separation.py -v
+
+      - name: Run scheduler integration tests
+        run: pytest test_scheduler.py -v
