@@ -103,7 +103,22 @@ class AirportState:
         if flight.status == FlightStatus.CANCELLED:
             raise ValueError(f"Flight '{flight_number}' is already cancelled.")
 
+        was_scheduled = flight.status == FlightStatus.SCHEDULED
         flight.status = FlightStatus.CANCELLED
+
+        # If the flight held resources, free them immediately so resource endpoints
+        # reflect the cancellation without requiring a generate_schedule call.
+        if was_scheduled:
+            for rw in self.runways:
+                if rw.id == flight.assigned_runway:
+                    rw.slots = [s for s in rw.slots if s.flight_number != flight_number]
+            for gate in self.gates:
+                if gate.id == flight.assigned_gate:
+                    gate.slots = [s for s in gate.slots if s.flight_number != flight_number]
+            flight.assigned_runway = None
+            flight.assigned_gate = None
+            flight.scheduled_start = None
+            flight.scheduled_end = None
 
         # Find all flights that transitively depend on the cancelled flight.
         affected: list[str] = []

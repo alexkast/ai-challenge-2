@@ -250,6 +250,52 @@ def _try_schedule_flight(flight: Flight, state: AirportState, config: AirportCon
 
 
 # ---------------------------------------------------------------------------
+# Topological sort
+# ---------------------------------------------------------------------------
+
+def _topological_sort_by_priority(flights: list[Flight]) -> list[Flight]:
+    """Return flights in dependency-respecting order, breaking ties by (priority.value, submission_order).
+
+    Uses Kahn's algorithm. Dependencies that exist in the flight set are processed before
+    their dependents. Independent flights and same-level flights are ordered by priority then
+    submission_order — identical to the flat sort when no dependency edges exist.
+    Any cycle remainder is appended in priority order.
+    """
+    flight_map = {f.flight_number: f for f in flights}
+
+    in_degree: dict[str, int] = {f.flight_number: 0 for f in flights}
+    dependents: dict[str, list[str]] = {f.flight_number: [] for f in flights}
+
+    for f in flights:
+        for dep_id in f.dependencies:
+            if dep_id in flight_map:
+                in_degree[f.flight_number] += 1
+                dependents[dep_id].append(f.flight_number)
+
+    for fn in dependents:
+        dependents[fn].sort()
+
+    result: list[Flight] = []
+    remaining = list(flights)
+
+    while remaining:
+        ready = [f for f in remaining if in_degree[f.flight_number] == 0]
+        if not ready:
+            # Cycle among remaining flights — process in priority order
+            remaining.sort(key=lambda f: (f.priority.value, f.submission_order))
+            result.extend(remaining)
+            break
+        ready.sort(key=lambda f: (f.priority.value, f.submission_order))
+        chosen = ready[0]
+        result.append(chosen)
+        remaining.remove(chosen)
+        for dep_fn in dependents[chosen.flight_number]:
+            in_degree[dep_fn] -= 1
+
+    return result
+
+
+# ---------------------------------------------------------------------------
 # Public entry point
 # ---------------------------------------------------------------------------
 
@@ -258,7 +304,7 @@ def generate_schedule(state: AirportState, config: AirportConfig) -> dict:
     state.reset_schedule()
 
     to_schedule = [f for f in state.flights.values() if f.status != FlightStatus.CANCELLED]
-    to_schedule.sort(key=lambda f: (f.priority.value, f.submission_order))
+    to_schedule = _topological_sort_by_priority(to_schedule)
 
     for flight in to_schedule:
         _try_schedule_flight(flight, state, config)
