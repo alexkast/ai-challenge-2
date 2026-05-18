@@ -37,7 +37,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Run separation unit tests
-        run: pytest test_separation.py -v
+        run: python -m pytest test_separation.py -v
 
       - name: Run scheduler integration tests
-        run: pytest test_scheduler.py -v
+        run: python -m pytest test_scheduler.py -v
