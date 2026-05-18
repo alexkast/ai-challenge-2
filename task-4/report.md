@@ -71,7 +71,7 @@ This makes explicit how much of the chain duration is waiting time versus active
 | Pydantic v2 | Data models, type validation, and JSON serialisation. |
 | Claude Code | Primary development environment. Used for code generation, iterative debugging, and code review across all modules. |
 | MCP Inspector | Interactive end-to-end testing of tools and resources without writing a dedicated client. |
-| GitHub Copilot | In-IDE assistance for boilerplate and repetitive patterns. |
+| GitHub Copilot | PR code review — identifying logic issues, edge cases, and code quality improvements before merging. |
 | CLAUDE.md | Persistent project context file. Architecture rules, invariants, and environment variable examples were recorded here so that Claude Code sessions remained consistent across multiple conversations. |
 | pytest | Unit tests for `check_runway_separation` (6 cases) and integration tests for the three validation scenarios. |
 
