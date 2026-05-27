@@ -505,8 +505,8 @@
       "name": "OpenAI Chat Model",
       "credentials": {
         "openAiApi": {
-          "id": "NH1wGdK1pw8taOW7",
-          "name": "n8n free OpenAI API credits"
+          "id": "4I3HUMphn8AiLOEG",
+          "name": "OpenAI account"
         }
       }
     },
@@ -902,8 +902,9 @@
       "parameters": {
         "model": {
           "__rl": true,
+          "value": "gpt-5-mini",
           "mode": "list",
-          "value": "gpt-5-mini"
+          "cachedResultName": "gpt-5-mini"
         },
         "responsesApiEnabled": false,
         "options": {}
@@ -918,8 +919,8 @@
       "name": "OpenAI Chat Model1",
       "credentials": {
         "openAiApi": {
-          "id": "NH1wGdK1pw8taOW7",
-          "name": "n8n free OpenAI API credits"
+          "id": "4I3HUMphn8AiLOEG",
+          "name": "OpenAI account"
         }
       }
     },
@@ -1408,8 +1409,9 @@
       "parameters": {
         "model": {
           "__rl": true,
+          "value": "gpt-5-mini",
           "mode": "list",
-          "value": "gpt-5-mini"
+          "cachedResultName": "gpt-5-mini"
         },
         "responsesApiEnabled": false,
         "options": {}
@@ -1424,14 +1426,14 @@
       "name": "OpenAI Chat Model2",
       "credentials": {
         "openAiApi": {
-          "id": "NH1wGdK1pw8taOW7",
-          "name": "n8n free OpenAI API credits"
+          "id": "4I3HUMphn8AiLOEG",
+          "name": "OpenAI account"
         }
       }
     },
     {
       "parameters": {
-        "jsCode": "const raw = $input.first().json;\nconst aiResponse = raw.text || raw.response || raw.output || '';\nconst prevData = $('Find Session & Extract Question').first().json;\nlet validation;\ntry {\n  const clean = aiResponse.replace(/```json\\n?/g, '').replace(/```\\n?/g, '').trim();\n  validation = JSON.parse(clean);\n} catch (e) {\n  validation = {\n    isCorrect: prevData.isCorrect,\n    feedback: prevData.isCorrect\n      ? \"Correct!\"\n      : `The correct answer was ${prevData.correctAnswer}.`\n  };\n}\nconst isCorrect = prevData.isCorrect;\nconst feedback = validation.feedback || (isCorrect ? \"Correct!\" : \"Incorrect.\");\n// HTML formatted feedback\nlet resultMessage = '';\nif (isCorrect) {\n  resultMessage = `✅ ${feedback}\\n\\n`;\n} else {\n  resultMessage = `❌ <b>Correct answer: ${prevData.correctAnswer}</b>\\n💡 ${feedback}\\n\\n`;\n}\n// Prepare next question if not last\nlet replyMarkup = null;\nif (!prevData.isLastQuestion) {\n  const questions = JSON.parse(prevData.questions);\n  const nextQ = questions[prevData.nextIndex];\n  replyMarkup = Object.entries(nextQ.options).map(([key, value]) => [{\n  text: `${key}) ${value.length > 55 ? value.substring(0, 55) + '...' : value}`,\n  callback_data: `answer_${prevData.sessionId}_${prevData.nextIndex}_${key}`\n}]);\n  resultMessage += `<b>Question ${prevData.nextIndex + 1}/${prevData.totalQuestions}:</b>\\n${nextQ.question}`;\n}\nreturn [{\n  json: {\n    chatId: prevData.chatId,\n    sessionId: prevData.sessionId,\n    questionIndex: prevData.questionIndex,\n    userAnswer: prevData.userAnswer,\n    correctAnswer: prevData.correctAnswer,\n    isCorrect: isCorrect,\n    explanation: feedback,\n    isLastQuestion: prevData.isLastQuestion,\n    message: resultMessage,\n    replyMarkup: replyMarkup,\n    questions: prevData.questions,\n    totalQuestions: prevData.totalQuestions\n  }\n}];"
+        "jsCode": "const raw = $input.first().json;\nconst aiResponse = raw.text || raw.response || raw.output || '';\nconst prevData = $('Find Session & Extract Question').first().json;\n\n// Escape HTML in AI-generated text\nconst escapeHtml = (text) => {\n  if (!text) return '';\n  return String(text)\n    .replace(/&/g, '&amp;')\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;');\n};\n\nlet validation;\ntry {\n  const clean = aiResponse.replace(/```json\\n?/g, '').replace(/```\\n?/g, '').trim();\n  validation = JSON.parse(clean);\n} catch (e) {\n  validation = {\n    isCorrect: prevData.isCorrect,\n    feedback: prevData.isCorrect\n      ? \"Correct!\"\n      : `The correct answer was ${prevData.correctAnswer}.`\n  };\n}\nconst isCorrect = prevData.isCorrect;\nconst feedback = validation.feedback || (isCorrect ? \"Correct!\" : \"Incorrect.\");\n\n// HTML formatted feedback\nlet resultMessage = '';\nif (isCorrect) {\n  resultMessage = `✅ ${escapeHtml(feedback)}\\n\\n`;\n} else {\n  resultMessage = `❌ <b>Correct answer: ${prevData.correctAnswer}</b>\\n💡 ${escapeHtml(feedback)}\\n\\n`;\n}\n\n// Prepare next question if not last\nlet replyMarkup = null;\nif (!prevData.isLastQuestion) {\n  const questions = JSON.parse(prevData.questions);\n  const nextQ = questions[prevData.nextIndex];\n  replyMarkup = Object.entries(nextQ.options).map(([key, value]) => [{\n    text: `${key}) ${value.length > 55 ? value.substring(0, 55) + '...' : value}`,\n    callback_data: `answer_${prevData.sessionId}_${prevData.nextIndex}_${key}`\n  }]);\n  resultMessage += `<b>Question ${prevData.nextIndex + 1}/${prevData.totalQuestions}:</b>\\n${escapeHtml(nextQ.question)}`;\n}\n\nreturn [{\n  json: {\n    chatId: prevData.chatId,\n    sessionId: prevData.sessionId,\n    questionIndex: prevData.questionIndex,\n    userAnswer: prevData.userAnswer,\n    correctAnswer: prevData.correctAnswer,\n    isCorrect: isCorrect,\n    explanation: escapeHtml(feedback),\n    isLastQuestion: prevData.isLastQuestion,\n    message: resultMessage,\n    replyMarkup: replyMarkup,\n    questions: prevData.questions,\n    totalQuestions: prevData.totalQuestions\n  }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -1616,7 +1618,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const allAnswers = $input.all();\nconst prevData = $('Parse Validation & Prepare Next').first().json;\nconst sessionId = prevData.sessionId;\nconst sessionAnswers = allAnswers\n  .filter(a => a.json.sessionId === sessionId)\n  .sort((a, b) => parseInt(a.json.questionIndex) - parseInt(b.json.questionIndex));\nlet correctCount = sessionAnswers.filter(a =>\n  a.json.isCorrect === true || a.json.isCorrect === 'true'\n).length;\n// Handle async: last answer may not be in sheets yet\nconst lastInSheets = sessionAnswers.some(a =>\n  String(a.json.questionIndex) === String(prevData.questionIndex)\n);\nif (!lastInSheets && prevData.isCorrect) correctCount++;\nconst totalQuestions = prevData.totalQuestions || 5;\nconst scorePercent = Math.round((correctCount / totalQuestions) * 100);\nlet emoji = '📖';\nif (scorePercent >= 90) emoji = '🏆';\nelse if (scorePercent >= 70) emoji = '🌟';\nelse if (scorePercent >= 40) emoji = '💪';\n// Per-question feedback for incorrect (HTML formatted)\nlet incorrectFeedback = '';\nfor (const ans of sessionAnswers) {\n  if (ans.json.isCorrect === false || ans.json.isCorrect === 'false') {\n    const qIdx = parseInt(ans.json.questionIndex) + 1;\n    incorrectFeedback += `\\n❌ <b>Q${qIdx}:</b> Correct: ${ans.json.correctAnswer}\\n💡 ${ans.json.explanation}\\n`;\n  }\n}\nif (!lastInSheets && !prevData.isCorrect) {\n  incorrectFeedback += `\\n❌ <b>Q${prevData.questionIndex + 1}:</b> Correct: ${prevData.correctAnswer}\\n💡 ${prevData.explanation}\\n`;\n}\nconst lastFeedback = prevData.isCorrect\n  ? `✅ ${prevData.explanation}\\n\\n`\n  : `❌ <b>Correct answer: ${prevData.correctAnswer}</b>\\n💡 ${prevData.explanation}\\n\\n`;\nconst message =\n  lastFeedback +\n  `━━━━━━━━━━━━━━━━━━\\n` +\n  `${emoji} <b>Quiz Complete!</b>\\n\\n` +\n  `📊 <b>Your Score: ${correctCount}/${totalQuestions} (${scorePercent}%)</b>\\n` +\n  (incorrectFeedback\n    ? `\\n📋 <b>Review incorrect answers:</b>${incorrectFeedback}`\n    : '\\n🎯 <b>Perfect score! Outstanding!</b>') +\n  `\\n\\n📚 /learn — add new material\\n📝 /quiz — try another topic`;\nreturn [{\n  json: { chatId: prevData.chatId, message }\n}];"
+        "jsCode": "const allAnswers = $input.all();\nconst prevData = $('Parse Validation & Prepare Next').first().json;\nconst sessionId = prevData.sessionId;\n\n// Escape HTML in AI-generated text to prevent Telegram parse errors\nconst escapeHtml = (text) => {\n  if (!text) return '';\n  return String(text)\n    .replace(/&/g, '&amp;')\n    .replace(/</g, '&lt;')\n    .replace(/>/g, '&gt;');\n};\n\nconst sessionAnswers = allAnswers\n  .filter(a => a.json.sessionId === sessionId)\n  .sort((a, b) => parseInt(a.json.questionIndex) - parseInt(b.json.questionIndex));\nlet correctCount = sessionAnswers.filter(a =>\n  a.json.isCorrect === true || a.json.isCorrect === 'true'\n).length;\nconst lastInSheets = sessionAnswers.some(a =>\n  String(a.json.questionIndex) === String(prevData.questionIndex)\n);\nif (!lastInSheets && prevData.isCorrect) correctCount++;\nconst totalQuestions = prevData.totalQuestions || 5;\nconst scorePercent = Math.round((correctCount / totalQuestions) * 100);\nlet emoji = '📖';\nif (scorePercent >= 90) emoji = '🏆';\nelse if (scorePercent >= 70) emoji = '🌟';\nelse if (scorePercent >= 40) emoji = '💪';\n\nlet incorrectFeedback = '';\nfor (const ans of sessionAnswers) {\n  if (ans.json.isCorrect === false || ans.json.isCorrect === 'false') {\n    const qIdx = parseInt(ans.json.questionIndex) + 1;\n    incorrectFeedback += `\\n❌ <b>Q${qIdx}:</b> Correct: ${ans.json.correctAnswer}\\n💡 ${escapeHtml(ans.json.explanation)}\\n`;\n  }\n}\nif (!lastInSheets && !prevData.isCorrect) {\n  incorrectFeedback += `\\n❌ <b>Q${prevData.questionIndex + 1}:</b> Correct: ${prevData.correctAnswer}\\n💡 ${escapeHtml(prevData.explanation)}\\n`;\n}\nconst lastFeedback = prevData.isCorrect\n  ? `✅ ${escapeHtml(prevData.explanation)}\\n\\n`\n  : `❌ <b>Correct answer: ${prevData.correctAnswer}</b>\\n💡 ${escapeHtml(prevData.explanation)}\\n\\n`;\n\nconst message =\n  lastFeedback +\n  `━━━━━━━━━━━━━━━━━━\\n` +\n  `${emoji} <b>Quiz Complete!</b>\\n\\n` +\n  `📊 <b>Your Score: ${correctCount}/${totalQuestions} (${scorePercent}%)</b>\\n` +\n  (incorrectFeedback\n    ? `\\n📋 <b>Review incorrect answers:</b>${incorrectFeedback}`\n    : '\\n🎯 <b>Perfect score! Outstanding!</b>') +\n  `\\n\\n📚 /learn — add new material\\n📝 /quiz — try another topic`;\nreturn [{\n  json: { chatId: prevData.chatId, message }\n}];"
       },
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
@@ -2401,7 +2403,7 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "cb5e05de-e96b-4ea6-8614-96a0675235e2",
+  "versionId": "53810fd5-967f-44e3-959e-1f9ce5a3cc9c",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "d032846cc4256a8aafbbcc0a0949f26074b43716455068d6d6e2bf06789761d3"
